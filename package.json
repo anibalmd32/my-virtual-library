@@ -1,0 +1,21 @@
+{
+  "name": "my-virtual-library",
+  "version": "1.0.0",
+  "description": "Web application for create reading lists",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch ./server/index.js",
+    "start": "node ./server/index.js",
+    "test": ""
+  },
+  "keywords": [
+    "web",
+    "javascript",
+    "vanilla",
+    "books",
+    "nodejs"
+  ],
+  "author": "Anibal Mendoza",
+  "license": "ISC"
+}
