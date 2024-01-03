@@ -1,6 +1,6 @@
-import '../libs/dotenv.js';
+// import '../libs/dotenv.js';
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 export {
   PORT
