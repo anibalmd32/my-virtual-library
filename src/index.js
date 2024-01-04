@@ -1,5 +1,6 @@
-import http from 'node:http';
-import { PORT } from './config/constants.js';
+import http from 'node:http'
+import './database/connection.js'
+import { PORT } from './config/constants.js'
 
 const server = http.createServer().listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
