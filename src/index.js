@@ -1,5 +1,6 @@
 import http from 'node:http'
 import './database/connection.js'
+import './database/schemas.js'
 import { PORT } from './config/constants.js'
 
 const server = http.createServer().listen(PORT, () => {
