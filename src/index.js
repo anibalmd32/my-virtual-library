@@ -1,14 +1,22 @@
 import http from 'node:http'
 import './database/connection.js'
 import './database/schemas.js'
-import { PORT } from './config/constants.js'
+import { PORT, URLsAllowed } from './config/constants.js'
 
 const server = http.createServer().listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+  console.info(`Server running on port ${PORT}`)
 })
 
 server.on('request', (req, res) => {
-  res.writeHead(200, {
-    'Content-type': 'text/plain'
-  }).end('Success')
+  res.setHeader('Access-Control-Allow-Origin', URLsAllowed)
+  res.setHeader('Content-type', 'application/json')
+
+  if (!res.writableEnded) {
+    res.statusCode = 404
+    res.end(JSON.stringify({
+      code: 404,
+      title: 'Not found',
+      message: 'Bad request'
+    }))
+  }
 })
