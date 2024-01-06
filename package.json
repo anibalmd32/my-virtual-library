@@ -9,6 +9,7 @@
     "start": "node ./src/index.js",
     "db:setup": "node ./src/database/setup.js",
     "db:schemas": "node ./src/database/schemas.js",
+    "db:seeds": "node ./src/database/seeds.js",
     "test": ""
   },
   "keywords": [
