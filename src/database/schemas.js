@@ -4,7 +4,7 @@ try {
   try {
     await database.execute(`CREATE TABLE IF NOT EXISTS authors(
         author_id CHAR(36) UNIQUE NOT NULL,
-        name VARCHAR(50) NOT NULL,
+        name VARCHAR(50) UNIQUE NOT NULL,
         biography TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -34,7 +34,7 @@ try {
   try {
     await database.execute(`CREATE TABLE IF NOT EXISTS genres(
       genre_id CHAR(36) UNIQUE NOT NULL,
-      name VARCHAR(16) UNIQUE NOT NULL,
+      name VARCHAR(255) UNIQUE NOT NULL,
       description TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
