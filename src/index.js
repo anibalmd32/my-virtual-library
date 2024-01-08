@@ -1,12 +1,12 @@
 import http from 'node:http'
-import './database/connection.js'
-import { PORT, URLsAllowed } from './config/constants.js'
+import database from './database/connection.js'
+import { PORT, URLsAllowed } from './config/server.js'
 
 const server = http.createServer().listen(PORT, () => {
   console.info(`Server running on port ${PORT}`)
 })
 
-server.on('request', (req, res) => {
+server.on('request', async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', URLsAllowed)
   res.setHeader('Content-type', 'application/json')
 

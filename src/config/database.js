@@ -1,5 +1,3 @@
-const PORT = process.env.PORT || 8080
-
 const DB_URI = process.env.DB_URI || 'mysql://root:@localhost:3307/library_db'
 
 const DB_OBJ_SETUP = {
@@ -9,13 +7,7 @@ const DB_OBJ_SETUP = {
   port: process.env.DB_PORT || 3307
 }
 
-const URLsAllowed = [
-  process.env.LOCAL_CLIENT || 'http://127.0.0.1:5500'
-]
-
 export {
-  PORT,
   DB_URI,
-  URLsAllowed,
   DB_OBJ_SETUP
 }
