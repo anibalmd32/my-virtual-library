@@ -1,33 +1,16 @@
 import AuthorsServices from './service.js'
+import Controller from '../../server/controller.js'
 
 const service = new AuthorsServices()
 
-class AuthorsController {
-  constructor (req, res) {
-    this.req = req
-    this.res = res
-  }
-
+class AuthorsController extends Controller {
   async getAll () {
     try {
       const allAuthors = await service.getAllAuthors()
-      this._goodResponse(allAuthors)
+      this._goodResponse(allAuthors, 'authors')
     } catch (error) {
       this._badResponse(error)
     }
-  }
-
-  _goodResponse (data) {
-    this.res.statusCode = 200
-    this.res.end(data)
-  }
-
-  _badResponse (err) {
-    this.res.statusCode = 400
-    this.res.end(JSON.stringify({
-      message: 'bad request',
-      err
-    }))
   }
 }
 

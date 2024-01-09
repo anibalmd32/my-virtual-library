@@ -2,10 +2,10 @@ import AuthorsController from './controller.js'
 import API from '../../server/api.js'
 
 async function authorsRouter (req, res) {
-  const authorsAPI = new API('authors')
-  const controller = new AuthorsController(req, res)
+  const authorsAPI = new API(req)
+  const controller = new AuthorsController(res)
 
-  authorsAPI.getAll() && await controller.getAll()
+  await authorsAPI.get('/authors', async () => await controller.getAll())
 }
 
 export default authorsRouter
