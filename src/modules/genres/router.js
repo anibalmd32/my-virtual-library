@@ -3,7 +3,7 @@ import API from '../../server/api.js'
 
 async function genresRouter (req, res) {
   const genresAPI = new API(req)
-  const controller = new GenresController(res)
+  const controller = new GenresController(req, res)
 
   await genresAPI.get('/genres', async () => {
     await controller.getAll()

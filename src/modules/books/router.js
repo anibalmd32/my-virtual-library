@@ -1,9 +1,17 @@
 import API from '../../server/api.js'
-async function booksRouter (req, res) {
-  const booksAPI = new API(req)
+import BooksController from './controller.js'
 
-  booksAPI.get('/books', () => {
-    res.end(JSON.stringify({ message: 'obteniendo libros' }))
+async function booksRouter (req, res) {
+  const baseUrl = '/books'
+  const booksAPI = new API(req)
+  const constroller = new BooksController(req, res)
+
+  await booksAPI.get(baseUrl, async () => {
+    await constroller.getAll()
+  })
+
+  await booksAPI.post(baseUrl, async () => {
+    await constroller.createOne()
   })
 }
 

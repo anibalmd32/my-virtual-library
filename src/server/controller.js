@@ -1,5 +1,6 @@
 class Controller {
-  constructor (res) {
+  constructor (req, res) {
+    this.req = req
     this.res = res
   }
 
@@ -18,7 +19,7 @@ class Controller {
     this.res.statusCode = 400
     this.res.end(JSON.stringify({
       message: 'bad request',
-      err
+      err: err.message
     }))
   }
 }
