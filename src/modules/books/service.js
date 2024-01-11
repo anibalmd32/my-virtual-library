@@ -2,7 +2,25 @@ import database from '../../database/connection.js'
 
 class BooksServices {
   async getAllBooks () {
-    const [data] = await database.execute('SELECT * FROM books')
+    // ? Busca y devuelve los libros con la información del mismo, el nombre del autor y el género al que pertenecen
+    const [data] = await database.execute(`
+      SELECT
+        b.book_id AS id,
+        b.title,
+        b.description,
+        b.publication_date AS publicationDate,
+        b.cover_url AS coverUrl,
+        a.name AS author,
+        g.name AS genre
+      FROM
+        books b
+      INNER JOIN
+        authors a ON b.author_id = a.author_id
+      INNER JOIN
+        book_genres bg ON b.book_id = bg.book_id
+      INNER JOIN
+        genres g ON bg.genre_id = g.genre_id
+    `)
 
     return data
   }
