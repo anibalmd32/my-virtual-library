@@ -13,6 +13,10 @@ async function booksRouter (req, res) {
   await booksAPI.post(baseUrl, async () => {
     await constroller.createOne()
   })
+
+  await booksAPI.put(baseUrl, async () => {
+    await constroller.updateOne()
+  })
 }
 
 export default booksRouter

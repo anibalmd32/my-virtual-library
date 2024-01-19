@@ -1,8 +1,9 @@
 function createBody (req) {
   return new Promise((resolve, reject) => {
     let body = []
+    const method = ['POST', 'PUT', 'PATCH']
 
-    if (req.method === 'POST') {
+    if (method.includes(req.method)) {
       req
         .on('error', err => reject(err))
         .on('data', chunk => {

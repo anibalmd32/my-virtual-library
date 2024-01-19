@@ -21,6 +21,18 @@ class BooksController extends Controller {
       this._badResponse(error)
     }
   }
+
+  async updateOne () {
+    try {
+      const data = await service.updateBookData(
+        this.req.query.bookId,
+        this.req.body
+      )
+      this._goodResponse(data, 'updated book')
+    } catch (error) {
+      this._badResponse(error)
+    }
+  }
 }
 
 export default BooksController
