@@ -27,44 +27,40 @@ class BooksServices {
       ]
     })
 
-    const dataToReturn = await Promise.all(bookData.map(async book => {
-      const genresName = await bookGenresOrm.selectJoin({
-        select: ['genres.name'],
-        join: [
-          {
-            tables: ['genres'],
-            on: 'genre_id',
-            value: 'genre_id'
+    const dataToReturn = await Promise.all(
+      bookData.map(async (book) => {
+        const genresName = await bookGenresOrm.selectJoin({
+          select: ['genres.name'],
+          join: [
+            {
+              tables: ['genres'],
+              on: 'genre_id',
+              value: 'genre_id'
+            }
+          ],
+          where: {
+            book_id: book.bookid
           }
-        ],
-        where: {
-          book_id: book.bookid
+        })
+
+        return {
+          id: book.bookid,
+          title: book.title,
+          description: book.description,
+          publicationDate: book.publicationdate,
+          coverUrl: book.coverurl,
+          authorName: book.authorsname,
+          genres: genresName.map((genre) => genre.genresname)
         }
       })
-
-      return {
-        id: book.bookid,
-        title: book.title,
-        description: book.description,
-        publicationDate: book.publicationdate,
-        coverUrl: book.coverurl,
-        authorName: book.authorsname,
-        genres: genresName.map(genre => genre.genresname)
-      }
-    }))
+    )
 
     return dataToReturn
   }
 
   async createOneBook (bookData) {
-    const {
-      title,
-      description,
-      publicationDate,
-      coverUrl,
-      author,
-      genres
-    } = bookData
+    const { title, description, publicationDate, coverUrl, author, genres } =
+      bookData
 
     const authorData = await authorsOrm.selectData({
       select: ['author_id'],
@@ -158,27 +154,34 @@ class BooksServices {
 
     if (bookData.genre) {
       // ? Verify that the genre exists
-      const [data] = await database.execute(`
+      const [data] = await database.execute(
+        `
         SELECT
           genre_id
         FROM
           genres
         WHERE
           name = ?
-      `, [bookData.genre])
+      `,
+        [bookData.genre]
+      )
 
       // ? If dosent exist, create it
       if (!data.length) {
-        await database.execute(`
+        await database.execute(
+          `
           INSERT INTO
             genres(genre_id, name)
           VALUES
             (UUID(), ?)
-        `, [bookData.genre])
+        `,
+          [bookData.genre]
+        )
       }
 
       // ? Update the relation between the book and the genre
-      await database.execute(`
+      await database.execute(
+        `
         UPDATE
           book_genres
         SET
@@ -192,7 +195,9 @@ class BooksServices {
           )
         WHERE
           book_id = ?
-      `, [bookData.genre, bookId])
+      `,
+        [bookData.genre, bookId]
+      )
     }
   }
 }
