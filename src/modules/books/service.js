@@ -59,76 +59,29 @@ class BooksServices {
   }
 
   async createOneBook (bookData) {
-    const { title, description, publicationDate, coverUrl, author, genres } =
-      bookData
+    const { title, description, publicationDate, coverUrl, author, genres } = bookData
+    const dbResErrors = ['Rolled Back!', 'Book already exists']
 
-    const authorData = await authorsOrm.selectData({
-      select: ['author_id'],
-      where: {
-        name: author
-      }
-    })
+    await database.execute(`
+      CALL AddBook(?, ?, ?, ?, ?, @res)
+    `, [title, description, publicationDate, coverUrl, author])
 
-    let authorId
+    const bookCreateRes = await database.execute('SELECT @res;')
 
-    if (!authorData.length) {
-      const newAuthor = await authorsOrm.insert({
-        data: {
-          author_id: randomUUID(),
-          name: author
-        }
-      })
-
-      authorId = newAuthor.author_id
+    if (dbResErrors.includes(bookCreateRes[0][0]['@res'])) {
+      throw new Error(bookCreateRes[0][0]['@res'])
     } else {
-      authorId = authorData[0].authorid
-    }
+      const bookId = bookCreateRes[0][0]['@res']
 
-    const newBook = await booksOrm.insert({
-      data: {
-        book_id: randomUUID(),
-        title,
-        publication_date: publicationDate,
-        cover_url: coverUrl,
-        description,
-        author_id: authorId
-      }
-    })
+      for (const genre of genres) {
+        await database.execute('CALL BookGenres(?, ?, @res)', [bookId, genre])
+        const dbRes = await database.execute('SELECT @res;')
 
-    const bookId = newBook.book_id
-
-    for (const genre of genres) {
-      const genreData = await genresOrm.selectData({
-        select: ['genre_id'],
-        where: {
-          name: genre
+        if (dbResErrors.includes(dbRes[0][0]['@res'])) {
+          throw new Error(dbRes[0][0]['@res'])
         }
-      })
-
-      let genreId
-
-      if (!genreData.length) {
-        const newGenre = await genresOrm.insert({
-          data: {
-            genre_id: randomUUID(),
-            name: genre
-          }
-        })
-
-        genreId = newGenre.genre_id
-      } else {
-        genreId = genreData[0].genreid
       }
-
-      await bookGenresOrm.insert({
-        data: {
-          book_id: bookId,
-          genre_id: genreId
-        }
-      })
     }
-
-    return newBook
   }
 
   async updateBookData (bookId, bookData) {

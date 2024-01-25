@@ -17,6 +17,7 @@ try {
 
             DECLARE a_id CHAR(36);
             DECLARE b_id CHAR(36);
+            DECLARE current_book_title VARCHAR(50);
 
             DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
             BEGIN
@@ -36,23 +37,30 @@ try {
                 END IF;
 
                 -- Create book
-                SET b_id = UUID();
+                SELECT title INTO current_book_title FROM books WHERE title = book_title;
 
-                INSERT INTO books(
-                    book_id,
-                    title,
-                    description,
-                    publication_date,
-                    cover_url,
-                    author_id
-                ) VALUES (
-                    b_id,
-                    book_title,
-                    book_description,
-                    publication,
-                    cover,
-                    a_id
-                );
+                IF current_book_title IS NULL THEN    
+                    SET b_id = UUID();
+
+                    INSERT INTO books(
+                        book_id,
+                        title,
+                        description,
+                        publication_date,
+                        cover_url,
+                        author_id
+                    ) VALUES (
+                        b_id,
+                        book_title,
+                        book_description,
+                        publication,
+                        cover,
+                        a_id
+                    );
+                ELSE
+                    SET exit_flag = 1;
+                    SELECT 'Book already exists' INTO res;
+                END IF;
 
                 IF exit_flag = 1 THEN
                     ROLLBACK;
@@ -77,7 +85,7 @@ try {
         BEGIN
             DECLARE exit_flag INT DEFAULT 0;
 
-            DECLARE g_id CHAR(26);
+            DECLARE g_id CHAR(36);
 
             DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
             BEGIN
@@ -92,7 +100,7 @@ try {
 
                 IF g_id IS NULL THEN
                     SET g_id = UUID();
-                    INSERT INTO genres(genere_id, name) VALUES (g_id, genre_name);
+                    INSERT INTO genres(genre_id, name) VALUES (g_id, genre_name);
                 END IF;
 
                 INSERT INTO book_genres(book_id, genre_id) VALUES (b_id, g_id);
