@@ -5,6 +5,7 @@ try {
     await database.execute(`
         CREATE VIEW IF NOT EXISTS book_data AS
         SELECT
+            b.book_id,
             b.title AS title,
             b.description AS description,
             b.publication_date AS publication,

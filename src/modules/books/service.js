@@ -1,61 +1,17 @@
-import { randomUUID } from 'node:crypto'
 import database from '../../database/connection.js'
-import ORM from '../../database/orm.js'
-
-const booksOrm = new ORM('books')
-const authorsOrm = new ORM('authors')
-const genresOrm = new ORM('genres')
-const bookGenresOrm = new ORM('book_genres')
 
 class BooksServices {
   async getAllBooks (genre) {
-    const bookData = await booksOrm.selectJoin({
-      select: [
-        'book_id',
-        'title',
-        'description',
-        'publication_date',
-        'cover_url',
-        'authors.name'
-      ],
-      join: [
-        {
-          tables: ['authors'],
-          on: 'author_id',
-          value: 'author_id'
-        }
-      ]
-    })
+    let query = 'SELECT * FROM book_data'
+    const params = []
 
-    const dataToReturn = await Promise.all(
-      bookData.map(async (book) => {
-        const genresName = await bookGenresOrm.selectJoin({
-          select: ['genres.name'],
-          join: [
-            {
-              tables: ['genres'],
-              on: 'genre_id',
-              value: 'genre_id'
-            }
-          ],
-          where: {
-            book_id: book.bookid
-          }
-        })
+    if (genre) {
+      query += ' WHERE genres LIKE ?'
+      params.push('%' + genre + '%')
+    }
+    const [booksData] = await database.execute(query, params)
 
-        return {
-          id: book.bookid,
-          title: book.title,
-          description: book.description,
-          publicationDate: book.publicationdate,
-          coverUrl: book.coverurl,
-          authorName: book.authorsname,
-          genres: genresName.map((genre) => genre.genresname)
-        }
-      })
-    )
-
-    return dataToReturn
+    return booksData
   }
 
   async createOneBook (bookData) {

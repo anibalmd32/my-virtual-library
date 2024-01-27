@@ -6,7 +6,8 @@ const service = new BooksServices()
 class BooksController extends Controller {
   async getAll () {
     try {
-      const data = await service.getAllBooks()
+      const genre = this.req.query.genre
+      const data = await service.getAllBooks(genre)
       this._goodResponse(data, 'books')
     } catch (error) {
       this._badResponse(error)
