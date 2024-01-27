@@ -10,7 +10,8 @@
     "db:setup": "node ./src/database/setup.js",
     "db:schemas": "node ./src/database/schemas.js",
     "db:seeds": "node ./src/database/seeds.js",
-    "db:sp": "node ./src/database/procedures",
+    "db:sp": "node ./src/database/procedures.js",
+    "db:views": "node ./src/database/views.js",
     "test": ""
   },
   "keywords": [
