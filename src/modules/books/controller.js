@@ -34,6 +34,16 @@ class BooksController extends Controller {
       this._badResponse(error)
     }
   }
+
+  async deleteOne () {
+    try {
+      const data = await service.deleteOneBook(this.req.query.bookId)
+
+      this._goodResponse(data, 'book deleted')
+    } catch (error) {
+      this._badResponse(error)
+    }
+  }
 }
 
 export default BooksController

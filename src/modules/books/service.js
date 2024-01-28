@@ -90,6 +90,19 @@ class BooksServices {
       }
     }
   }
+
+  async deleteOneBook (bookId) {
+    await database.execute(
+      'CALL DeleteBook(?, @res)',
+      [bookId]
+    )
+
+    const bookDeletedRes = await database.execute('SELECT @res')
+
+    if (spErrors.includes(bookDeletedRes[0][0]['@res'])) {
+      throw new Error(bookDeletedRes[0][0]['@res'])
+    }
+  }
 }
 
 export default BooksServices

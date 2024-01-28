@@ -149,6 +149,39 @@ try {
     throw new Error('Error to create stored procedure: InsertAuthor', error)
   }
 
+  try {
+    await datatabase.execute(`
+        CREATE PROCEDURE IF NOT EXISTS DeleteBook(
+            IN b_id CHAR(36),
+            OUT res VARCHAR(255)
+        )
+        BEGIN
+            DECLARE id CHAR(36);
+
+            DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+            BEGIN
+                ROLLBACK;
+                SELECT 'Rolled Back!' INTO res;
+            END;
+
+            START TRANSACTION;
+                SELECT book_id INTO id FROM books WHERE book_id = b_id;
+
+                IF id IS NULL THEN
+                    ROLLBACK;
+                    SELECT 'Resource not found' INTO res;
+                ELSE
+                    DELETE FROM book_genres WHERE book_id = b_id;
+                    DELETE FROM books WHERE book_id = b_id;
+
+                    COMMIT;
+                END IF;
+        END;
+    `)
+  } catch (error) {
+    throw new Error('Error to create stored procedure: DeleteBook', error)
+  }
+
   console.info('Stored procedures has been execute successfull')
 } catch (error) {
   console.error('Error to execute stored procedures', error)

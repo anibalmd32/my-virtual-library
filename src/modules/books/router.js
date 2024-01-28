@@ -17,6 +17,10 @@ async function booksRouter (req, res) {
   await booksAPI.put(baseUrl, async () => {
     await constroller.updateOne()
   })
+
+  await booksAPI.delete(baseUrl, async () => {
+    await constroller.deleteOne()
+  })
 }
 
 export default booksRouter
