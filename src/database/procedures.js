@@ -118,6 +118,37 @@ try {
     throw new Error('Error to create store procedure: BookGenres', error)
   }
 
+  // Create author
+  try {
+    await datatabase.execute(`
+        CREATE PROCEDURE IF NOT EXISTS InsertAuthor(
+            IN a_name VARCHAR(50),
+            OUT res VARCHAR(255)
+        )
+        BEGIN
+            DECLARE a_id CHAR(36);
+
+            DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+            BEGIN
+                ROLLBACK;
+                SELECT 'Rolled Back!' INTO res;
+            END;
+
+            START TRANSACTION;
+                SELECT author_id INTO a_id FROM authors WHERE name = a_name;
+
+                IF a_id IS NULL THEN
+                    SET a_id = UUID();
+                    INSERT INTO authors(author_id, name) VALUES (a_id, a_name);
+                END IF;
+            COMMIT;
+        END;
+    `)
+  } catch (error) {
+    console.log(error)
+    throw new Error('Error to create stored procedure: InsertAuthor', error)
+  }
+
   console.info('Stored procedures has been execute successfull')
 } catch (error) {
   console.error('Error to execute stored procedures', error)
