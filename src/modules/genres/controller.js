@@ -6,7 +6,7 @@ const service = new GenresService()
 class GenresController extends Controller {
   async getAll () {
     try {
-      const data = await service.getALlGenres()
+      const data = await service.getGenres(this.req.query.genreName)
       this._goodResponse(data, 'genres')
     } catch (error) {
       this._badResponse(error)
