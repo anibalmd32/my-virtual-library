@@ -149,6 +149,7 @@ try {
     throw new Error('Error to create stored procedure: InsertAuthor', error)
   }
 
+  // Delete book
   try {
     await datatabase.execute(`
         CREATE PROCEDURE IF NOT EXISTS DeleteBook(
@@ -180,6 +181,41 @@ try {
     `)
   } catch (error) {
     throw new Error('Error to create stored procedure: DeleteBook', error)
+  }
+
+  // Create genre
+  try {
+    await datatabase.execute(`
+        CREATE PROCEDURE IF NOT EXISTS InsertGenre(
+            IN g_name VARCHAR(255),
+            IN g_description TEXT,
+            OUT res VARCHAR(255)
+        )
+        BEGIN
+            DECLARE g_id CHAR(36);
+
+            DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+            BEGIN
+                ROLLBACK;
+                SELECT 'Rolled Back!' INTO res;
+            END;
+
+            START TRANSACTION;
+                SELECT genre_id INTO g_id FROM genres WHERE name = g_name;
+
+                IF g_id IS NOT NULL THEN
+                    ROLLBACK;
+                    SELECT 'Resource already exists' INTO res;
+                ELSE
+                    SET g_id = UUID();
+                    INSERT INTO genres(genre_id, name, description) VALUES (g_id, g_name, g_description);
+
+                    COMMIT;
+                END IF;
+        END;
+    `)
+  } catch (error) {
+    throw new Error(`Error to create stored procedure: InsertGenre ${error}`)
   }
 
   console.info('Stored procedures has been execute successfull')

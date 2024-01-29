@@ -1,4 +1,5 @@
 import database from '../../database/connection.js'
+import spErrors from '../../libs/spErrors.js'
 
 class GenresService {
   async getGenres (genreName) {
@@ -15,7 +16,20 @@ class GenresService {
     return data
   }
 
-  async createGenre (genreData) {}
+  async createGenre (genreData) {
+    const { name, description } = genreData
+
+    await database.execute(
+      'CALL InsertGenre(?, ?, @res)',
+      [name, description]
+    )
+
+    const genreInsertedRes = await database.execute('SELECT @res')
+
+    if (spErrors.includes(genreInsertedRes[0][0]['@res'])) {
+      throw new Error(genreInsertedRes[0][0]['@res'])
+    }
+  }
 
   async updateOneGenre (genreData, genreId) {}
 

@@ -12,6 +12,15 @@ class GenresController extends Controller {
       this._badResponse(error)
     }
   }
+
+  async createOne () {
+    try {
+      const data = await service.createGenre(this.req.body)
+      this._goodResponse(data, 'genre')
+    } catch (error) {
+      this._badResponse(error)
+    }
+  }
 }
 
 export default GenresController

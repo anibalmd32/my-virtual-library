@@ -10,9 +10,8 @@ async function genresRouter (req, res) {
     await controller.getAll()
   })
 
-  await genresAPI.post(baseUrl, () => {
-    console.log(req.body)
-    res.end(JSON.stringify({ message: 'creado...', body: req.body }))
+  await genresAPI.post(baseUrl, async () => {
+    await controller.createOne()
   })
 }
 
