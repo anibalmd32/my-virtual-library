@@ -31,9 +31,25 @@ class GenresService {
     }
   }
 
-  async updateOneGenre (genreData, genreId) {}
+  async updateOneGenre (genreData, genreId) {
+    let query = 'UPDATE genres SET '
+    const params = []
 
-  async deleteOneGenre (genreId) {}
+    for (const genreProp in genreData) {
+      query += `${genreProp} = ?, `
+      params.push(genreData[genreProp])
+    }
+
+    query = query.slice(0, -2)
+    query += ' WHERE genre_id = ?'
+    params.push(genreId)
+
+    await database.execute(query, params)
+  }
+
+  async deleteOneGenre (genreId) {
+    await database.execute('DELETE FROM genres WHERE genre_id = ?', [genreId])
+  }
 }
 
 export default GenresService

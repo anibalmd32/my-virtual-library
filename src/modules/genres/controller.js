@@ -21,6 +21,28 @@ class GenresController extends Controller {
       this._badResponse(error)
     }
   }
+
+  async updateOne () {
+    try {
+      const data = await service.updateOneGenre(
+        this.req.body,
+        this.req.query.genreId
+      )
+
+      this._goodResponse(data, 'update genre')
+    } catch (error) {
+      this._badResponse(error)
+    }
+  }
+
+  async deleteOne () {
+    try {
+      const data = await service.deleteOneGenre(this.req.query.genreId)
+      this._goodResponse(data, 'delete genre')
+    } catch (error) {
+      this._badResponse(error)
+    }
+  }
 }
 
 export default GenresController

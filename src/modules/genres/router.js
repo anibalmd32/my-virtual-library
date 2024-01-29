@@ -13,6 +13,14 @@ async function genresRouter (req, res) {
   await genresAPI.post(baseUrl, async () => {
     await controller.createOne()
   })
+
+  await genresAPI.put(baseUrl, async () => {
+    await controller.updateOne()
+  })
+
+  await genresAPI.delete(baseUrl, async () => {
+    await controller.deleteOne()
+  })
 }
 
 export default genresRouter
