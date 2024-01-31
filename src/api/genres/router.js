@@ -2,7 +2,7 @@ import GenresController from './controller.js'
 import API from '../../server/api.js'
 
 async function genresRouter (req, res) {
-  const baseUrl = '/genres'
+  const baseUrl = '/api/genres'
   const genresAPI = new API(req)
   const controller = new GenresController(req, res)
 
@@ -21,6 +21,8 @@ async function genresRouter (req, res) {
   await genresAPI.delete(baseUrl, async () => {
     await controller.deleteOne()
   })
+
+  return null
 }
 
 export default genresRouter
