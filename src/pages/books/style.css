@@ -1,0 +1,27 @@
+body {
+    background-color: black;
+    color: wheat;
+}
+
+#books {
+    display: flex;
+    gap: 1rem;
+}
+
+.card {
+    width: 250px;
+    height: auto;
+    background-color: aliceblue;
+    color: rgb(43, 43, 43);
+    padding: 1rem;
+    border-radius: 1rem;
+
+    & .card-book-author {
+        font-weight: bold;
+        text-transform: capitalize;
+    }
+
+    & .card-book-description::first-letter {
+        text-transform: uppercase;
+    }
+}
