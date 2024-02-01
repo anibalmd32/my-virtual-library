@@ -15,8 +15,6 @@ class Router {
     }
   }
 
-  filesImporting () {}
-
   async createRouter () {
     this.req.body = await this.createBody()
     this.req.query = this.createQuries()
@@ -93,7 +91,7 @@ class Router {
       let body = []
       const Methods = ['GET', 'POST', 'PUT', 'DELETE']
 
-      if (Methods.includes(this.req.Methods)) {
+      if (Methods.includes(this.req.method)) {
         this.req
           .on('error', err => reject(err))
           .on('data', chuck => {
